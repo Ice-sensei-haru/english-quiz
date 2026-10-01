@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中3 英語 定期テスト予想問題 (Lesson 5 & 6)</title>
+<script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-100 min-h-screen py-8 px-4 font-sans text-slate-800">
+<div class="max-w-3xl mx-auto bg-white rounded-2xl shadow-xl overflow-hidden">
+<!-- Header -->
+<header class="bg-indigo-600 text-white p-6 text-center">
+<h1 class="text-2xl font-bold md:text-3xl">中学3年 英語 定期テスト対策問題</h1>
+<p class="text-indigo-200 mt-2 text-sm md:text-base">Lesson 5 & Lesson 6 予想問題 10問（空所補充＆整序英作）</p>
+</header>
+
+<!-- Quiz Body -->
+<main class="p-6 md:p-8" id="app">
+<!-- Start Screen -->
+<div id="start-screen" class="text-center py-8">
+<h2 class="text-2xl font-bold mb-4">テストを開始します</h2>
+<p class="text-slate-600 mb-6 leading-relaxed">
+教科書（Lesson 5 & 6）で学習する重要表現と文法内容（関係代名詞・接触節・want + 人 + to ... など）が出題されます。<br>
+【前半 5問】重要表現の空所補充問題<br>
+【後半 5問】文法整序英作（並べ替え）問題
+</p>
+<button onclick="startQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition active:scale-95 text-lg">
+スタート！
+</button>
+</div>
+
+<!-- Question Screen -->
+<div id="quiz-screen" class="hidden">
+<!-- Progress Bar -->
+<div class="mb-6">
+<div class="flex justify-between text-sm font-semibold text-slate-500 mb-1">
+<span id="question-category">カテゴリ</span>
+<span id="question-progress">第 1 / 10 問</span>
+</div>
+<div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+<div id="progress-bar" class="bg-indigo-600 h-2.5 rounded-full transition-all duration-300" style="width: 10%"></div>
+</div>
+</div>
+
+<!-- Question Card -->
+<div class="bg-slate-50 border border-slate-200 rounded-xl p-5 mb-6">
+<span id="section-badge" class="inline-block px-3 py-1 bg-indigo-100 text-indigo-700 rounded-full text-xs font-bold mb-2"></span>
+<h3 id="question-text" class="text-lg font-bold text-slate-800 mb-2"></h3>
+<p id="japanese-text" class="text-slate-600 italic font-medium text-sm md:text-base mb-2"></p>
+</div>
+
+<!-- Options Container -->
+<div id="options-container" class="space-y-3 mb-6">
+<!-- Dynamically filled -->
+</div>
+
+<!-- Feedback Area -->
+<div id="feedback-area" class="hidden rounded-xl p-4 mb-6">
+<div id="feedback-result" class="font-bold text-lg mb-1"></div>
+<p id="feedback-explanation" class="text-sm leading-relaxed"></p>
+</div>
+
+<!-- Next Button -->
+<div class="flex justify-end">
+<button id="next-btn" onclick="nextQuestion()" class="hidden bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2.5 px-6 rounded-lg transition">
+次の問題へ ➔
+</button>
+</div>
+</div>
+
+<!-- Result Screen -->
+<div id="result-screen" class="hidden text-center py-8">
+<h2 class="text-2xl font-bold text-slate-800 mb-2">お疲れ様でした！</h2>
+<p class="text-slate-600 mb-6">テスト結果</p>
+
+<div class="inline-block bg-indigo-50 border-2 border-indigo-200 rounded-2xl p-6 mb-8">
+<div class="text-5xl font-extrabold text-indigo-600 mb-2">
+<span id="score">0</span> <span class="text-2xl text-slate-500 font-normal">/ 10 問正解</span>
+</div>
+<p id="score-comment" class="text-sm text-indigo-800 font-medium"></p>
+</div>
+
+<div>
+<button onclick="resetQuiz()" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-8 rounded-full shadow-lg transform transition active:scale-95">
+もう一度挑戦する
+</button>
+</div>
+</div>
+</main>
+</div>
+
+<script>
+const quizData = [
+// 1-5: 重要表現の空所補充問題
+{
+section: "前半：重要表現（空所補充）",
+question: "1. 翻訳者はどのようにしてこの問題に対処していますか？\nHow do the translators ( 　　 ) with this?",
+options: [
+{ text: "deal", isCorrect: true, rationale: "「deal with ~」で「〜に対処する、〜を扱う」という意味になります。" },
+{ text: "look", isCorrect: false, rationale: "「look for」は「探す」、「look at」は「見る」という意味です。" },
+{ text: "talk", isCorrect: false, rationale: "「talk with」は「〜と話す」という意味になります。" },
+{ text: "help", isCorrect: false, rationale: "「help with」は「〜を手伝う」という意味になります。" }
+]
+},
+{
+section: "前半：重要表現（空所補充）",
+question: "2. 海外の読者は「お弁当」に馴染みがありません。\nReaders overseas are ( 　　 ) with bento.",
+options: [
+{ text: "unfamiliar", isCorrect: true, rationale: "「be unfamiliar with ~」で「〜に馴染みがない、〜をよく知らない」を意味します。" },
+{ text: "familiar", isCorrect: false, rationale: "「familiar」は「よく知っている、親しみがある」という意味で逆になります。" },
+{ text: "interested", isCorrect: false, rationale: "「be interested in」で「〜に興味がある」という形になります。" },
+{ text: "popular", isCorrect: false, rationale: "「be popular with」で「〜に人気がある」となります。" }
+]
+},
+{
+section: "前半：重要表現（空所補充）",
+question: "3. 私たちはみんなに配慮し、彼らを助ける方法を考えることが大切です。\nIt's important for us to be ( 　　 ) of them.",
+options: [
+{ text: "aware", isCorrect: true, rationale: "「be aware of ~」で「〜に気づいている、〜を意識している・配慮する」という意味です。" },
+{ text: "full", isCorrect: false, rationale: "「be full of」は「〜でいっぱいである」という意味です。" },
+{ text: "afraid", isCorrect: false, rationale: "「be afraid of」は「〜を恐れている」という意味です。" },
+{ text: "proud", isCorrect: false, rationale: "「be proud of」は「〜を誇りに思っている」という意味です。" }
+]
+},
+{
+section: "前半：重要表現（空所補充）",
+question: "4. 私は今、ゲームで使う予定の紙コップを探しています。\nI am ( 　　 ) for paper cups.",
+options: [
+{ text: "looking", isCorrect: true, rationale: "「look for ~」で「〜を探す」という意味です。進行形になっているため looking になります。" },
+{ text: "waiting", isCorrect: false, rationale: "「wait for」は「〜を待つ」という意味です。" },
+{ text: "asking", isCorrect: false, rationale: "「ask for」は「〜を求める」という意味です。" },
+{ text: "caring", isCorrect: false, rationale: "「care for」は「〜のお世話をする、〜を好む」という意味です。" }
+]
+},
+{
+section: "前半：重要表現（空所補充）",
+question: "5. 公平さとは、人々を平等に扱うことです。\nFairness is about ( 　　 ) people equally.",
+options: [
+{ text: "treating", isCorrect: true, rationale: "「treat」は「〜を扱う、接する」を意味します。前置詞 about の後ろなので動名詞 treating になります。" },
+{ text: "making", isCorrect: false, rationale: "「make」は「〜を作る」という意味です。" },
+{ text: "giving", isCorrect: false, rationale: "「give」は「〜を与える」という意味です。" },
+{ text: "calling", isCorrect: false, rationale: "「call」は「〜と呼ぶ」という意味です。" }
+]
+},
+
+// 6-10: 文法整序英作（並べ替え）問題
+{
+section: "後半：文法整序（並べ替え）",
+question: "6. 【関係代名詞(主格)】すごい技ができるサッカー選手についてのアニメです。\n日本文に合うように、適切な語順の文を選びなさい。",
+options: [
+{ text: "The anime is about a soccer player who can do amazing tricks.", isCorrect: true, rationale: "先行詞 a soccer player（人）を受けて、関係代名詞 who が主語の役割を果たして後ろから説明しています。" },
+{ text: "The anime is about a soccer player can do who amazing tricks.", isCorrect: false, rationale: "関係代名詞 who は節の先頭（a soccer player の直後）に置く必要があります。" },
+{ text: "The anime is who about a soccer player can do amazing tricks.", isCorrect: false, rationale: "who の位置が不適切です。" },
+{ text: "The anime is about a soccer player who amazing tricks can do.", isCorrect: false, rationale: "who の後は動詞 can do が続かなければなりません。" }
+]
+},
+{
+section: "後半：文法整序（並べ替え）",
+question: "7. 【接触節（関係代名詞の省略）】これは私がフリーマーケットで見つけたかわいいお玉です。\n日本文に合うように、適切な語順の文を選びなさい。",
+options: [
+{ text: "This is the cute ladle I found at the flea market.", isCorrect: true, rationale: "先行詞 the cute ladle の後ろに [主語 I + 動詞 found] を直接続ける接触節（目的格関係代名詞の省略）の形です。" },
+{ text: "This is the cute ladle found I at the flea market.", isCorrect: false, rationale: "修飾する節の中の語順が [動詞 found + 主語 I] になってしまっています。" },
+{ text: "This is I found the cute ladle at the flea market.", isCorrect: false, rationale: "修飾される名詞（the cute ladle）が適切な位置にありません。" },
+{ text: "This is at the flea market the cute ladle I found.", isCorrect: false, rationale: "語順が不自然です。" }
+]
+},
+{
+section: "後半：文法整序（並べ替え）",
+question: "8. 【want + 人 + to ...】あなたにこのジャケットから袖を切り落としてほしいのです。\n日本文に合うように、適切な語順の文を選びなさい。",
+options: [
+{ text: "I want you to cut off the sleeves from this jacket.", isCorrect: true, rationale: "「want + 人 + to + 動詞の原形」で「人に〜してほしい」という重要構文です。" },
+{ text: "I want to you cut off the sleeves from this jacket.", isCorrect: false, rationale: "to の位置が違います。「want 人 to ...」の順番にします。" },
+{ text: "I want you cut off to the sleeves from this jacket.", isCorrect: false, rationale: "to 不定詞の使い方が不適切です。" },
+{ text: "I to want you cut off the sleeves from this jacket.", isCorrect: false, rationale: "want の前に to を置くことはできません。" }
+]
+},
+{
+section: "後半：文法整序（並べ替え）",
+question: "9. 【関係代名詞(主格)】日本語をよく知らない人々がいます。\n日本文に合うように、適切な語順の文を選びなさい。",
+options: [
+{ text: "There are people who don't know Japanese culture well.", isCorrect: true, rationale: "先行詞 people の後ろに主格の関係代名詞 who を置き、その後に don't know ... を続けます。" },
+{ text: "There are people don't know who Japanese culture well.", isCorrect: false, rationale: "who の位置が不適切です。" },
+{ text: "There are who people don't know Japanese culture well.", isCorrect: false, rationale: "who は先行詞 people の直後に置きます。" },
+{ text: "People there are who don't know Japanese culture well.", isCorrect: false, rationale: "There are ~ の構文が崩れています。" }
+]
+},
+{
+section: "後半：文法整序（並べ替え）",
+question: "10. 【接触節（関係代名詞の省略）】私たちはみんなが食べられるケーキを作るべきです。\n日本文に合うように、適切な語順の文を選びなさい。",
+options: [
+{ text: "We should make a cake everyone can eat.", isCorrect: true, rationale: "先行詞 a cake の後ろに [主語 everyone + 動詞 can eat] を直接つなげる接触節の文構造です。" },
+{ text: "We should make everyone can eat a cake.", isCorrect: false, rationale: "修飾される名詞 a cake が節の後ろに来てしまっています。" },
+{ text: "We should a cake make everyone can eat.", isCorrect: false, rationale: "動詞 make の位置が不適切です。" },
+{ text: "We should make a cake can eat everyone.", isCorrect: false, rationale: "節の中の語順（主語+動詞）が逆になっています。" }
+]
+}
+];
+
+let currentQuestionIndex = 0;
+let score = 0;
+let selectedOption = null;
+
+function startQuiz() {
+document.getElementById('start-screen').classList.add('hidden');
+document.getElementById('quiz-screen').classList.remove('hidden');
+currentQuestionIndex = 0;
+score = 0;
+showQuestion();
+}
+
+function showQuestion() {
+const q = quizData[currentQuestionIndex];
+selectedOption = null;
+
+// Update Header/Progress
+document.getElementById('question-category').innerText = q.section;
+document.getElementById('question-progress').innerText = `第 ${currentQuestionIndex + 1} / ${quizData.length} 問`;
+document.getElementById('section-badge').innerText = q.section;
+document.getElementById('progress-bar').style.width = `${((currentQuestionIndex + 1) / quizData.length) * 100}%`;
+
+// Update Text
+document.getElementById('question-text').innerText = q.question;
+
+// Fill Options
+const optionsContainer = document.getElementById('options-container');
+optionsContainer.innerHTML = '';
+
+q.options.forEach((opt, index) => {
+const btn = document.createElement('button');
+btn.className = "w-full text-left p-4 rounded-xl border border-slate-300 hover:border-indigo-500 hover:bg-indigo-50/50 transition font-medium flex items-center justify-between";
+btn.onclick = () => selectOption(index);
+btn.innerHTML = `
+<span>${opt.text}</span>
+<span class="w-6 h-6 border-2 border-slate-300 rounded-full flex items-center justify-center text-xs text-transparent check-mark">✓</span>
+`;
+optionsContainer.appendChild(btn);
+});
+
+// Reset Feedback and Next Button
+document.getElementById('feedback-area').classList.add('hidden');
+document.getElementById('next-btn').classList.add('hidden');
+}
+
+function selectOption(index) {
+if (selectedOption !== null) return; // Prevent changing choice
+selectedOption = index;
+
+const q = quizData[currentQuestionIndex];
+const chosen = q.options[index];
+const buttons = document.getElementById('options-container').children;
+
+// Disable all buttons
+for (let i = 0; i < buttons.length; i++) {
+buttons[i].disabled = true;
+buttons[i].classList.remove('hover:border-indigo-500', 'hover:bg-indigo-50/50');
+}
+
+// Highlight options
+if (chosen.isCorrect) {
+score++;
+buttons[index].classList.add('border-green-500', 'bg-green-50', 'text-green-800');
+buttons[index].querySelector('.check-mark').classList.add('bg-green-500', 'border-green-500', 'text-white');
+} else {
+buttons[index].classList.add('border-red-500', 'bg-red-50', 'text-red-800');
+// Highlight correct option
+q.options.forEach((opt, idx) => {
+if (opt.isCorrect) {
+buttons[idx].classList.add('border-green-500', 'bg-green-50', 'text-green-800');
+}
+});
+}
+
+// Show Feedback
+const feedbackArea = document.getElementById('feedback-area');
+const feedbackResult = document.getElementById('feedback-result');
+const feedbackExplanation = document.getElementById('feedback-explanation');
+
+feedbackArea.classList.remove('hidden', 'bg-green-50', 'bg-red-50', 'text-green-900', 'text-red-900', 'border', 'border-green-200', 'border-red-200');
+
+if (chosen.isCorrect) {
+feedbackArea.classList.add('bg-green-50', 'text-green-900', 'border', 'border-green-200');
+feedbackResult.innerText = "⭕️ 正解！";
+} else {
+feedbackArea.classList.add('bg-red-50', 'text-red-900', 'border', 'border-red-200');
+feedbackResult.innerText = "❌ 不正解...";
+}
+
+feedbackExplanation.innerText = chosen.rationale;
+
+// Show Next Button
+document.getElementById('next-btn').classList.remove('hidden');
+}
+
+function nextQuestion() {
+currentQuestionIndex++;
+if (currentQuestionIndex < quizData.length) {
+showQuestion();
+} else {
+showResult();
+}
+}
+
+function showResult() {
+document.getElementById('quiz-screen').classList.add('hidden');
+document.getElementById('result-screen').classList.remove('hidden');
+
+document.getElementById('score').innerText = score;
+
+const comment = document.getElementById('score-comment');
+if (score === 10) {
+comment.innerText = "素晴らしい！満点です！定期テスト対策はバッチリですね！";
+} else if (score >= 7) {
+comment.innerText = "惜しい！高得点です。間違えた部分を復習しておきましょう！";
+} else {
+comment.innerText = "教科書の本文や重要構文をもう一度見直して再挑戦してみましょう！";
+}
+}
+
+function resetQuiz() {
+document.getElementById('result-screen').classList.add('hidden');
+startQuiz();
+}
+</script>
+</body>
+</html>
+```eof
+
+http://googleusercontent.com/immersive_entry_chip/0
+
+添付いただいた資料（三省堂 Lesson 5 & 6）の内容に沿って、定期テスト対策の予想問題Webアプリおよびクイズデータを作成しました！
+
+**【出題内容】**
+- **1〜5問目（重要表現・空所補充）：** `deal with`, `be unfamiliar with`, `be aware of`, `look for`, `treat` などの教科書重要語句
+- **6〜10問目（文法整序）：** 人を表す関係代名詞 `who`、目的格の省略（接触節）、`want + 人 + to ...` 構文の並べ替え
+
+テスト前の総仕上げにぜひ活用して、満点を目指して頑張ってください！
